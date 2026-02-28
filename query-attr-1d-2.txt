@@ -1,0 +1,13 @@
+Q1 1.0f	4500.0f	4587.0f	2.0f lineitem	
+Q3 1.0f	4500.0f	4788.0f	2.0f orders lineitem
+Q4 1.0f	4500.0f	4627.0f	2.0f orders lineitem
+Q6 1.0f	4500.0f	4558.0f	2.0f lineitem
+Q9 1.0f	4500.0f	4538.0f	2.0f orders lineitem
+Q10 1.0f 4500.0f 4703.0f 2.0f orders lineitem
+Q12 1.0f 4500.0f 4846.0f 2.0f orders lineitem
+Q14 1.0f 4500.0f 4748.0f 2.0f lineitem
+Q19 1.0f 4500.0f 4649.0f 2.0f lineitem
+CQ0 1.0f 4500.0f 4663.0f 2.0f orders
+CQ1 1.0f 4500.0f 4728.0f 2.0f lineitem
+CQ2 1.0f 4500.0f 4810.0f 2.0f lineitem
+CQ3 1.0f 4500.0f 4860.0f 2.0f orders
