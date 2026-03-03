@@ -365,7 +365,17 @@ public void dyn_sch_main(String instanceGrpId)
 		    		  reqNumNodes!=multiQrySchLst.reqNumNodesLst.get(m)) {
 		    	  if(reqNumNodes>multiQrySchLst.reqNumNodesLst.get(m) && QueryScheduler.cur_time<multiQrySchLst.nodeReqTimeLst.get(m))
 				  break;
-			      boolean reqNodeResize=true;		    	 
+			  else if(reqNumNodes>multiQrySchLst.reqNumNodesLst.get(m)){
+                              if(multiQrySchLst.schIndex<(multiQrySchLst.nodeReqTimeLst.size()-1)){
+                                  //if(multiQrySchLst.reqNumNodesLst.get(multiQrySchLst.schIndex+1)>multiQrySchLst.reqNumNodesLst.get(multiQrySchLst.schIndex)){
+                                      if((multiQrySchLst.nodeReqTimeLst.get(multiQrySchLst.schIndex+1)-multiQrySchLst.nodeReqTimeLst.get(multiQrySchLst.schIndex))<2*Cluster.clusterInitOH){
+                                      break;
+                                  }
+                              //}
+                     
+                          }	  
+                          }
+			  boolean reqNodeResize=true;		    	 
 		    	  if(reqNodeResize) {
 		    	  selNumNodes=multiQrySchLst.reqNumNodesLst.get(m);
 		    	  int resizeCnt=selNumNodes;
