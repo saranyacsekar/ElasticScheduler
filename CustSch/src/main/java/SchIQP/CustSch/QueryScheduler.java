@@ -76,76 +76,12 @@ class exe_log{
 	this.start_file_no=start_file_no;
 	this.stop_file_no=stop_file_no;
 	this.clusterIndex=nodeIndex;
-	this.slackTime=new ArrayList<>();
+	this.slackTime=new ArrayList<Float>();
 	for(int i=0;i<slkTime.size();i++)
 		this.slackTime.add(slkTime.get(i));
 
 }
 }
-
-class QryProcLstForSimu{
-	String qryId;
-	float compStartTime;
-	float compStopTime;
-	int numNodes;
-	//float simuTime;
-	float batchRdyTime;
-	int curBatchNo;
-	float[] batchCompDur=new float[Cluster.numNodes.size()];	
-	float[] aggDur=new float[Cluster.numNodes.size()];
-	float[] curBatchAggDur=new float[Cluster.numNodes.size()];
-	int curBatchSize;
-	int numBatches;
-	QryProcLstForSimu(float startTime, float stopTime, String qryId,float  batchRdyTime, float[] compDur,int numNodes,
-			int curBatchNo,float[] aggDur,int curBatchSize,int numBatches,float[] curBatchAggDur){
-		this.compStartTime=startTime;
-		this.compStopTime=stopTime;
-		this.qryId=qryId;	
-		//this.simuTime=simuTime;
-		this.batchRdyTime=batchRdyTime;
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.batchCompDur[i]=compDur[i];
-		}
-		this.numNodes=numNodes;
-		this.curBatchNo=curBatchNo;
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.aggDur[i]=aggDur[i];
-		}
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.curBatchAggDur[i]=curBatchAggDur[i];
-		}
-		this.curBatchSize=curBatchSize;		
-		this.numBatches=numBatches;
-		Logger.writeLog("setting batchRdyTime="+this.batchRdyTime+" "+batchRdyTime);
-	}
-	QryProcLstForSimu(QryProcLstForSimu srcQry){
-		this.qryId=srcQry.qryId;
-		this.compStartTime=srcQry.compStartTime;
-		this.compStopTime=srcQry.compStopTime;
-		this.numNodes=srcQry.numNodes;
-		//this.simuTime=srcQry.simuTime;
-		this.batchRdyTime=srcQry.batchRdyTime;
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.batchCompDur[i]=srcQry.batchCompDur[i];
-		}
-		this.numNodes=srcQry.numNodes;
-		this.curBatchNo=srcQry.curBatchNo;
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.aggDur[i]=srcQry.aggDur[i];
-		}
-		for(int i=0;i<Cluster.numNodes.size();i++) {
-			this.curBatchAggDur[i]=srcQry.curBatchAggDur[i];
-		}
-		this.curBatchSize=srcQry.curBatchSize;		
-		this.numBatches=srcQry.numBatches;
-	}
-	
-	public void updateCompTimeWAggCost(float compStopTime){
-		Logger.writeLog("updating compStopTime from "+this.compStopTime+" to "+compStopTime);
-		this.compStopTime=compStopTime;
-	}
-}
-
 
 class MultiQrySch{	
 	float totalComputeTime;
@@ -157,10 +93,10 @@ class MultiQrySch{
 	float startTime;
 	int startNumNodes;
 	
-	ArrayList<Integer> nodeReqTimeLst=new ArrayList<>();
-	ArrayList<String> qryIdLst=new ArrayList<>();
-	ArrayList<Integer> reqNumNodesLst=new ArrayList<>();
-	ArrayList<Integer> qryBatchNoLst=new ArrayList<>();	
+	ArrayList<Integer> nodeReqTimeLst=new ArrayList<Integer>();
+	ArrayList<String> qryIdLst=new ArrayList<String>();
+	ArrayList<Integer> reqNumNodesLst=new ArrayList<Integer>();
+	ArrayList<Integer> qryBatchNoLst=new ArrayList<Integer>();	
 	//ArrayList<Integer> reqIssued=new ArrayList<>();
 	//ArrayList<Integer> reqIssuedTime=new ArrayList<>();
 	public MultiQrySch(float totalComputeTime,float totalTime,float idleTime) {
@@ -524,6 +460,7 @@ public void checkForNewQueries()
 	 String st; 
 	 boolean skipFlg=false;
 	 ArrayList<String> tmp_qlist = new ArrayList<String>();
+	
  	 while ((st = br.readLine()) != null) {
 		//  Logger.writeLog("str from file: "+st);
 		  String str[]=st.split("\\s+");
@@ -575,6 +512,15 @@ public void checkForNewQueries()
 	  {
 		Logger.writeLog(q_list.get(i).Query_id);
 	  }*/
+	  
+	  //setting max wind end time
+          float maxDeadline=1.0f;
+	  for(int i=0;i<q_list.size();i++){
+	  if(q_list.get(i).deadline>maxDeadline){
+	  	maxDeadline=q_list.get(i).deadline;
+	  }
+	  }
+	  Cluster.curSessionWindEnd=(int)maxDeadline;	  
 	 }
 	 catch(Exception e)
 	 {
@@ -670,7 +616,7 @@ public boolean detOptimalClusterForMultiQry() {
 			}
 		}
 		//System.exit(0);
-		ArrayList <Query> innerList=new ArrayList<>();
+		ArrayList <Query> innerList=new ArrayList<Query>();
 		
 		for(int i=0;i<q_list.size();i++) {
 			

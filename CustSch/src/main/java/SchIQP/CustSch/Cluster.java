@@ -11,7 +11,7 @@ import com.amazonaws.services.elasticmapreduce.model.InstanceGroupModifyConfig;
 import com.amazonaws.services.elasticmapreduce.model.ModifyInstanceGroupsRequest;
 
 public class Cluster {
-public static ArrayList<Integer> numNodes=new ArrayList<>();
+public static ArrayList<Integer> numNodes=new ArrayList<Integer>();
 	
 	
 	public static float clusterInitOH = 8*60;
@@ -32,7 +32,7 @@ public static ArrayList<Integer> numNodes=new ArrayList<>();
         Cluster.numNodes.add(30); 
 		setCostFact();
 	}
-	public static ArrayList<Float> costFact=new ArrayList<>();
+	public static ArrayList<Float> costFact=new ArrayList<Float>();
 	public static void setCostFact() {
 		Cluster.costFact.add(new Float(0.0002));
 		Cluster.costFact.add(new Float(0.0004));

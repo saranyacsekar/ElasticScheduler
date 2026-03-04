@@ -23,7 +23,7 @@ public class QueryRepository {
 		static String	fullPathPartSupp=tpcInputPath+"/file-ip/static/partSupp";
 		static String 	fullPathSupp=tpcInputPath+"/file-ip/static/supplier";
 		static String	fullPathNation=tpcInputPath+"/file-ip/static/nation";
-		static String 	fullPathAdCampaings=yahooInputPath+"/staticdata2";
+		static String 	fullPathAdCampaings=yahooInputPath+"/staticdata";
 		
 			
 			

@@ -16,8 +16,8 @@ class costMdl{
 	float costPerDol;
 	float costReductionFact;
 	ArrayList<Integer> aggNumBatches=new ArrayList<Integer>();
-	ArrayList<Float> aggX1CoEff=new ArrayList<>();	
-	ArrayList<Float> aggOffset=new ArrayList<>();	
+	ArrayList<Float> aggX1CoEff=new ArrayList<Float>();	
+	ArrayList<Float> aggOffset=new ArrayList<Float>();	
 	costMdl(int numNodes,float x1CoEff, float offset, float costPerDol, float cstRedFact, ArrayList<Integer> aggNumBatches, ArrayList<Float> aggCoEff, ArrayList<Float> aggOffset){
 		this.numNodes=numNodes;
 		this.x1CoEff=x1CoEff;	
@@ -149,7 +149,7 @@ public class Query {
 			if(qry.ip_file_name.get(i).equals("orders")||qry.ip_file_name.get(i).equals("lineitem"))
 					basePath=System.getenv("TPC_INPUT_PATH")+"/file-ip/streaming/";
 			else if(qry.ip_file_name.get(i).equals("events"))
-				basePath=System.getenv("YAHOO_INPUT_PATH")+"/jsonevents2/";
+				basePath=System.getenv("YAHOO_INPUT_PATH")+"/jsonevents/";
 		}
 		
 		this.num_ip_streams=qry.ip_file_name.size();
@@ -186,7 +186,7 @@ public class Query {
 		if(ip_file_name.equals("orders")||ip_file_name.equals("lineitem"))
 				basePath=System.getenv("TPC_INPUT_PATH")+"/file-ip/streaming/";
 		else if(ip_file_name.equals("events"))
-			basePath=System.getenv("YAHOO_INPUT_PATH")+"/jsonevents2/";
+			basePath=System.getenv("YAHOO_INPUT_PATH")+"/jsonevents/";
 			
 		Logger.writeLog("total dur:"+this.total_duration+" num_tuple_total:"+this.num_tuple_total);
 		Logger.writeLog("deadline:"+this.deadline);
@@ -251,8 +251,8 @@ public class Query {
 		 int numNodes=0;
 		 float m=0.0f,c=0.0f,costPerDol=0.0f,cstRedFact=0.0f;
 		 ArrayList<Integer> numBatches=new ArrayList<Integer>();
-		 ArrayList<Float> aggCoEff=new ArrayList<>();
-		 ArrayList<Float> aggOffset=new ArrayList<>();
+		 ArrayList<Float> aggCoEff=new ArrayList<Float>();
+		 ArrayList<Float> aggOffset=new ArrayList<Float>();
 		 
 		 int innerIndex=0;
 		 while ((st = br.readLine()) != null) {
@@ -832,7 +832,7 @@ public int detMinBatchSizeForMultiQryBaseline() {
 	/*QueryScheduler.exe_log_lst.add(new exe_log(QueryScheduler.prev_timestamp,QueryScheduler.curr_timestamp,start_time,
 					QueryScheduler.cur_time,duration,this.query_id,this.cur_batch_no,(this.num_tuple_total-this.num_tuple_pending+1)
 					,(this.cur_batch_size),QueryScheduler.curNumNodes));*/	
-	ArrayList<Float> slkTime=new ArrayList<>();
+	ArrayList<Float> slkTime=new ArrayList<Float>();
 	for(int ctr=0;ctr<Cluster.numNodes.size();ctr++)
 		slkTime.add(this.multiQryAttr.slackTime);
 	/*QueryScheduler.exe_log_lst.add(new exe_log(QueryScheduler.prev_timestamp,QueryScheduler.curr_timestamp,start_time,
@@ -995,22 +995,4 @@ public float EstTimeForFile(int fileNo) {
 	return estTime;
 }
 
-public float EstDurationForHigNode(int numTuples, int numNodes) {
-float cost=0.0f;
-
-System.out.println("This module must not be invoked. So exiting");
-System.exit(0);
-
-return cost;
-
-}
-
-public float EstAggCostForHigNode(int numBatches, int numNodes) {
-float aggcost=0.0f;
-
-System.out.println("This module must not be invoked. So exiting");
-System.exit(0);
-return aggcost;
-
-}
 }

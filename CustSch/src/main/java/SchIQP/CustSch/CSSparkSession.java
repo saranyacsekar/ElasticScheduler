@@ -8,9 +8,11 @@ public class CSSparkSession {
 	static SparkConf conf;
 	public static SparkSession spark;
 	public static boolean sessionClosed=true;
-	static String logPath=System.getenv("LOG_PATH");
+	//static String logPath=System.getenv("LOG_PATH");
 	//static String logFile="file:///"+logPath+"/spark-events";
-	static String logFile="file:///s3://cs-spark-emr-s3/logs/spark-events/";
+	//static String logFileBasePath=System.getenv("LOG_PATH"); 
+	//static String logFile="file:///"+logFileBasePath+"/spark-events/";
+	//static String logFile="file:///s3://cs-spark-emr-s3/logs/spark-events/";
 	public static void create_spark_session(String numInstances,String numCores){
 	 conf = new SparkConf()//.set("spark.driver.memory","10g")
 			//.set("spark.executor.memory","10g")

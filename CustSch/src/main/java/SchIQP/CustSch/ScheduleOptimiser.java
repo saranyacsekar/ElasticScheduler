@@ -33,13 +33,13 @@ class MultiQryBchSch{
         String qryIdTBS;
         int qryBchNoTBS;
         boolean schGenerated;
-	ArrayList<Float> curTime=new ArrayList<>();
-	ArrayList<String> qryIdLst=new ArrayList<>();
-	ArrayList<Integer> reqNumNodesLst=new ArrayList<>();
-	ArrayList<Integer> qryBatchNoLst=new ArrayList<>();
-        ArrayList<Float> compStartTimeLst=new ArrayList<>();
-        ArrayList<Float> compStopTimeLst=new ArrayList<>();
-        ArrayList<Float> batchRdyTimeLst=new ArrayList<>();
+	ArrayList<Float> curTime=new ArrayList<Float>();
+	ArrayList<String> qryIdLst=new ArrayList<String>();
+	ArrayList<Integer> reqNumNodesLst=new ArrayList<Integer>();
+	ArrayList<Integer> qryBatchNoLst=new ArrayList<Integer>();
+        ArrayList<Float> compStartTimeLst=new ArrayList<Float>();
+        ArrayList<Float> compStopTimeLst=new ArrayList<Float>();
+        ArrayList<Float> batchRdyTimeLst=new ArrayList<Float>();
 	//ArrayList<Integer> reqIssued=new ArrayList<>();
 	//ArrayList<Integer> reqIssuedTime=new ArrayList<>();
 	public MultiQryBchSch(float totalComputeTime,float totalTime,float idleTime) {
@@ -311,9 +311,9 @@ public class ScheduleOptimiser {
 	    float simuCurTime=cur_time;
 	    float simuStartTime=cur_time;
 	    //float totalComputeTime=0.0f;
-	    ArrayList<Query> simuQryList=new ArrayList<>();
-	    ArrayList<Query> simuQryList2=new ArrayList<>();
-	    ArrayList<Query> simuQryListTmp=new ArrayList<>();
+	    ArrayList<Query> simuQryList=new ArrayList<Query>();
+	    ArrayList<Query> simuQryList2=new ArrayList<Query>();
+	    ArrayList<Query> simuQryListTmp=new ArrayList<Query>();
 	    
 	    boolean exitFlg=false;
 	        
@@ -346,15 +346,15 @@ public class ScheduleOptimiser {
 	    
 	   
 	    QryBchSchPointValues schPtValues =new QryBchSchPointValues();
-	    ArrayList<String>  qryId=new ArrayList<>();
-	    ArrayList<Integer> numTuplesProcessed=new ArrayList<>();
-	    ArrayList<Integer> numTuplesTotal=new ArrayList<>();
-	    ArrayList<Integer> numTuplesPending=new ArrayList<>();
-	    ArrayList<Integer> curBatchNo=new ArrayList<>();
-	    ArrayList<Integer> numBatchesProcessed=new ArrayList<>();
-	    ArrayList<Integer> curBatchSize=new ArrayList<>();
-	    ArrayList<Integer> numBatchesForAgg=new ArrayList<>();
-	    ArrayList<Integer> completionSts=new ArrayList<>();
+	    ArrayList<String>  qryId=new ArrayList<String>();
+	    ArrayList<Integer> numTuplesProcessed=new ArrayList<Integer>();
+	    ArrayList<Integer> numTuplesTotal=new ArrayList<Integer>();
+	    ArrayList<Integer> numTuplesPending=new ArrayList<Integer>();
+	    ArrayList<Integer> curBatchNo=new ArrayList<Integer>();
+	    ArrayList<Integer> numBatchesProcessed=new ArrayList<Integer>();
+	    ArrayList<Integer> curBatchSize=new ArrayList<Integer>();
+	    ArrayList<Integer> numBatchesForAgg=new ArrayList<Integer>();
+	    ArrayList<Integer> completionSts=new ArrayList<Integer>();
 	    
 	    for(int i=0;i<q_list.size();i++) {
 	        numTuplesProcessed.add(0);
@@ -813,9 +813,9 @@ public class ScheduleOptimiser {
 		    float simuCurTime=cur_time;
 		    float simuStartTime=cur_time;
 		    //float totalComputeTime=0.0f;
-		    ArrayList<Query> simuQryList=new ArrayList<>();
-		    ArrayList<Query> simuQryList2=new ArrayList<>();
-		    ArrayList<Query> simuQryListTmp=new ArrayList<>();
+		    ArrayList<Query> simuQryList=new ArrayList<Query>();
+		    ArrayList<Query> simuQryList2=new ArrayList<Query>();
+		    ArrayList<Query> simuQryListTmp=new ArrayList<Query>();
 		    
 		 
 		        
@@ -1324,15 +1324,15 @@ public static void genFixedConfigSch(ArrayList<Query> simuQryListTmp, float simu
 		            exitFlg=true;
 		            break;
 		        }
-		        ArrayList<String>  qryId=new ArrayList<>();
-		        ArrayList<Integer> numTuplesProcessed=new ArrayList<>();
-		        ArrayList<Integer> numTuplesTotal=new ArrayList<>();
-		        ArrayList<Integer> numTuplesPending=new ArrayList<>();
-		        ArrayList<Integer> curBatchNo=new ArrayList<>();
-		        ArrayList<Integer> numBatchesProcessed=new ArrayList<>();
-		        ArrayList<Integer> curBatchSize=new ArrayList<>();
-		        ArrayList<Integer> numBatchesForAgg=new ArrayList<>();
-		        ArrayList<Integer> completionSts=new ArrayList<>();
+		        ArrayList<String>  qryId=new ArrayList<String>();
+		        ArrayList<Integer> numTuplesProcessed=new ArrayList<Integer>();
+		        ArrayList<Integer> numTuplesTotal=new ArrayList<Integer>();
+		        ArrayList<Integer> numTuplesPending=new ArrayList<Integer>();
+		        ArrayList<Integer> curBatchNo=new ArrayList<Integer>();
+		        ArrayList<Integer> numBatchesProcessed=new ArrayList<Integer>();
+		        ArrayList<Integer> curBatchSize=new ArrayList<Integer>();
+		        ArrayList<Integer> numBatchesForAgg=new ArrayList<Integer>();
+		        ArrayList<Integer> completionSts=new ArrayList<Integer>();
 		        
 		        for(int i=0;i<simuQryListTmp.size();i++) {
 		            numTuplesProcessed.add(simuQryListTmp.get(i).simuPars.numTuplesProcessed);
@@ -1678,9 +1678,9 @@ public static void genOnlyLLFSchMain(float cur_time,List<Query> q_list){
 			   float simuCurTime=cur_time;
 			   float simuStartTime=cur_time;
 			   //float totalComputeTime=0.0f;
-			   ArrayList<Query> simuQryList=new ArrayList<>();
-			   ArrayList<Query> simuQryList2=new ArrayList<>();
-			   ArrayList<Query> simuQryListTmp=new ArrayList<>();   
+			   ArrayList<Query> simuQryList=new ArrayList<Query>();
+			   ArrayList<Query> simuQryList2=new ArrayList<Query>();
+			   ArrayList<Query> simuQryListTmp=new ArrayList<Query>();   
 			   MultiQryBchSch bchSch = new MultiQryBchSch();
 		   
 		        
