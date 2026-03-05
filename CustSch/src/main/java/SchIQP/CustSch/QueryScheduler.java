@@ -520,7 +520,7 @@ public void checkForNewQueries()
           float maxDeadline=1.0f;
 	  for(int i=0;i<q_list.size();i++){
 	  if(q_list.get(i).deadline>maxDeadline){
-	  	maxDeadline=q_list.get(i).deadline;
+	  	maxDeadline=q_list.get(i).wind_end_time;
 	  }
 	  }
 	  Cluster.curSessionWindEnd=(int)maxDeadline;	  
