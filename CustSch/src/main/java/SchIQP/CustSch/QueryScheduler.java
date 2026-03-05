@@ -209,16 +209,19 @@ public class QueryScheduler {
 public void sim_llf() {
 	checkForNewQueries();
 	ScheduleOptimiser.genOnlyLLFSchMain(cur_time,q_list);
+	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 
 public void sim_fixed_config() {
 	checkForNewQueries();
 	ScheduleOptimiser.genFixedConfigSchMain(cur_time, q_list);
+	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 
 public void sim_elastic_config() {
 	checkForNewQueries();
 	ScheduleOptimiser.runSimulationMain(cur_time,firstEntry,curNodeIndex,q_list,true);
+	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 	
 public void dyn_sch_main(String instanceGrpId)
@@ -229,7 +232,7 @@ public void dyn_sch_main(String instanceGrpId)
 	while(true) {
 		
 		//Logger.writeLog("**************************");
-		//System.out.println("CurTime::"+QueryScheduler.cur_time+" CompTime=="+multiQrySchLst.totalComputeTime+" Idle Time=="+multiQrySchLst.idleTime);
+		//System.out.println("CurTime::"+QueryScheduler.cur_time+" CompTime=="+multi_SchLst.totalComputeTime+" Idle Time=="+multiQrySchLst.idleTime);
 		System.out.println("CurTime::"+QueryScheduler.cur_time+" runsimu="+runSimu);
 		checkForNewQueries();
 		//if(cur_time>1 && runSimu) {
