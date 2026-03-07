@@ -83,6 +83,7 @@ class exe_log{
 }
 }
 
+/* Represents the node requriements at different time points along with the query batch details which gets scheduled for each time point.*/
 class MultiQrySch{	
 	float totalComputeTime;
 	float totalTime;
@@ -169,7 +170,7 @@ public class QueryScheduler {
 	
 	
 	
-
+/* Logs the cluster resize requests issued in $QRY_INPUT_PATH/clusterResizeLog.txt */
 	public static void logClusterResize(String qryId, int curNodes, int selNodes,int reqNodes) {
 		if(firstEntryLog)
 			emptyResizeLog();
@@ -188,6 +189,7 @@ public class QueryScheduler {
 		
 	}
 
+/* Truncates the contents of $QRY_INPUT_PATH/clusterResizeLog.txt. Invoked once in the beginning of run*/
 	public static void emptyResizeLog(){		
 		Process proc;	
 	    String command = "> "+logFileOp;
@@ -205,25 +207,31 @@ public class QueryScheduler {
 		}	
 	}
 
-
+/* Simulates LLF without Batch Size determination*/
 public void sim_llf() {
 	checkForNewQueries();
 	ScheduleOptimiser.genOnlyLLFSchMain(cur_time,q_list);
 	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 
+/* Simulates Fixed config (with Batch Size determination)*/
 public void sim_fixed_config() {
 	checkForNewQueries();
 	ScheduleOptimiser.genFixedConfigSchMain(cur_time, q_list);
 	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 
+/* Simulates Elastic config determination with variable number of nodes(with Batch Size determination)*/
 public void sim_elastic_config() {
 	checkForNewQueries();
 	ScheduleOptimiser.runSimulationMain(cur_time,firstEntry,curNodeIndex,q_list,true);
 	System.out.println("Results available in "+System.getenv("QRY_INPUT_PATH")+"/exeLog.txt");
 }
 	
+/* Main module of Scheduler which performs routine tasks
+1. Invokes simulation, if runSimu is set
+2. Does Schedule execution by determining the currently available query batches for processing 
+3. Issues node resize requests when needed*/	
 public void dyn_sch_main(String instanceGrpId)
 {
 	
@@ -451,6 +459,7 @@ public void dyn_sch_main(String instanceGrpId)
 	}
 }
 
+/* Checks if addition/deletion of queries to be processed*/
 public void checkForNewQueries()
 {
 	
@@ -531,6 +540,7 @@ public void checkForNewQueries()
 	 }	
 }
 
+/* Sorts the queries based on least laxity/slack time */
 public ArrayList<Query> sortOn_slackTime(List<Query> q_list, int nodeIndex) {
 	List<Query> tmp= new ArrayList<Query>();
 	ArrayList<Query> opList= new ArrayList<Query>();
@@ -566,6 +576,7 @@ public ArrayList<Query> sortOn_slackTime(List<Query> q_list, int nodeIndex) {
 	return opList;
 }
 	
+/* Writes the result of query scheduling to $QRY_INPUT_PATH/res.txt */	
 public void writeResToFile() {
 	String qryIpBasePath=System.getenv("QRY_INPUT_PATH"); 
 	String inputPath=qryIpBasePath+"/";	 
@@ -597,7 +608,10 @@ public void writeResToFile() {
 }
 
 
-
+/* Carries out actual query processing /schedule execution
+   1.determines queries whose batches are ready for processing by invoking check_ip_availability_multiQry() for each query 
+   2. computes slack time of the queries whose batches are ready for processing  by invoking compSlackTimeNMinCompCostForMultiQry_2() for each query
+   3. sorts the quereis by invoking sortOn_slackTime()*/
 public boolean detOptimalClusterForMultiQry() {
 	int nodeIndex=0;
 	float minTotalCost=9999.0f;
@@ -622,8 +636,9 @@ public boolean detOptimalClusterForMultiQry() {
 		ArrayList <Query> innerList=new ArrayList<Query>();
 		
 		for(int i=0;i<q_list.size();i++) {
-			
-			if((!q_list.get(i).completed)&&(q_list.get(i).check_ip_availability_multiQry(Cluster.defaultNodeIndex))) {
+
+			//if((!q_list.get(i).completed)&&(q_list.get(i).check_ip_availability_multiQry(Cluster.defaultNodeIndex))) {			
+			if((!q_list.get(i).completed)&&(q_list.get(i).check_ip_availability_multiQry())) {
 			//if((!q_list.get(i).completed)&&(q_list.get(i).check_ip_availability_multiQry(nodeIndexTmp))) {
 			//if(!q_list.get(i).completed) {
 				//q_list.get(i).check_ip_availability_multiQry(Cluster.defaultNodeIndex);
@@ -662,34 +677,8 @@ public boolean detOptimalClusterForMultiQry() {
 
 
 
-public int getCurNumNodes() {
-	int numNodes=0;
-	///* TBM : ForSimu */
-	//System.out.println("getCurNumNodes-->"+cur_time+" "+reqNodeIndex);
-	/*if(cur_time>=(aws_req_time+(Cluster.clusterInitOH-60)))	
-		numNodes=Cluster.numNodes.get(reqNodeIndex);
-	else
-		numNodes=Cluster.numNodes.get(curNodeIndex);*/
-	numNodes=Cluster.numNodes.get(curNodeIndex);
-	for(int i=0;i<multiQrySchLst.nodeReqTimeLst.size();i++) {
-		System.out.println(cur_time+" "+multiQrySchLst.nodeReqTimeLst.get(i)+" "+multiQrySchLst.reqNumNodesLst.get(i));
-		if(cur_time>=multiQrySchLst.nodeReqTimeLst.get(i)) {
-			numNodes=multiQrySchLst.reqNumNodesLst.get(i);
-			continue;
-		}
-		else {
-			break;
-		}			
-	}
-	
-	
-	//numNodes=Cluster.getCurClusterSize();
-	return numNodes;
-	
-}
-
-
-
+/* Determines the current input rate based on averaging the tuples recevied for 3 minutes duration.
+   Sets runSimu to true, denoting simulation has to be rerun, if computed input rate exceeds the max input rate supported by the current schedule*/
 public void checkForIpRate() {
 	Logger.writeLog("Checking ip rate @ "+QueryScheduler.cur_time);
 	for(int i=0;i<this.q_list.size();i++) {

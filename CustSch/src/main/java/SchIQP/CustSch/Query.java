@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.nio.file.*;
 
+/*Cost model of the query*/
 class costMdl{
 	int numNodes;
 	float x1CoEff;
@@ -236,6 +237,7 @@ public class Query {
 		
 	}
 	
+	/* Initialises the cost model */
 	public void init_comp_cost()
 	{
 		// comp_cost.add(new ArrayList<Integer>()); 
@@ -323,6 +325,7 @@ public class Query {
 		return slackTime;
 	}
 	
+/* Determines the batch size, X such that  ⌈𝑁/𝑥⌉ ∗ 𝐷𝑢𝑟 (𝐶1, 𝑥) ≤ 2 ∗ 𝐷𝑢𝑟 (𝐶1, 𝑁) and 𝐷𝑢𝑟 (𝐶1, 𝑥) < Cmax*/	
 public int detMinBatchSizeForMultiQryBaseline() {
 		
 		int batchSize=-1;
@@ -360,14 +363,14 @@ public int detMinBatchSizeForMultiQryBaseline() {
 			else
 				break;
 			
-		}
-		
+		}	
 		
 		Logger.writeLog(this.query_id+"::default batch size==="+batchSize);
 		return batchSize;
 		
 	}
 	
+	/* Determines Batch size, X by invoking detMinBatchSizeForMultiQryBaseline(). X is further increased based on input rate*/
 	public void detMinBatchSizeForMultiQryIpRateBased(int numTimes,int numNodeIndex) {
 		Logger.writeLog("\n computing min batch size for:"+this.query_id+" with "+numTimes+" num times"+" num_tuple_total="+this.num_tuple_total);
 		//Logger.writeLog("len:"+comp_cost.get(9).get(0).get_cost());
@@ -391,6 +394,7 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		
 	}
 	
+	/* Computes the slack time based by invoking compSlackTimeGeneric() */
 	public void compSlackTimeNMinCompCostForMultiQry_2(int numNodeIndex) {
 		float curBatchMinCompCost=0.0f,compCost4SlackTime=0.0f,slackTime=0.0f,totalCostInDol=0.0f;
 		int numBatches=(this.num_tuple_total-this.num_tuple_processed)/this.cur_batch_size;
@@ -425,7 +429,9 @@ public int detMinBatchSizeForMultiQryBaseline() {
 				slackTime,lstBatchCompCost,slkTimeForLstBatch,compCostForSJF);
 	}
 	
-	public boolean check_ip_availability_multiQry(int numNodeIndex) {
+	/* Returns true if currently available number of files to be processed is greater than or equal to the chosen Batch Size.
+	List of files ready for processing is populated to oFiles(Orders files), lFiles(Lineitem files) and yFiles(Yahoo files)*/
+	public boolean check_ip_availability_multiQry() {
 		//if(this.query_id.equals("Q12"))
 			//System.out.println(QueryScheduler.cur_time+"::"+numNodeIndex);
 		boolean ipSts=false;
@@ -562,6 +568,7 @@ public int detMinBatchSizeForMultiQryBaseline() {
 	}
 	
 
+	/* Computes the time taken for aggregation, for the given number of batches using configuration, numNodeIndex*/
 	public float compAggCost(int numNodeIndex,int num_batches)
 	{
 		
@@ -605,6 +612,8 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		}*/
 		return cost;
 	}
+	
+	/* Computes the processing time duration for the given number of tuples(i.e. files) using configuration, nodeIndex */
 	public float EstDuration(int nodeIndex, int num_tuples){		
 		float duration=0.0f;
 		//if(this.query_id.equals("Q6"))
@@ -622,6 +631,7 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		return duration;
 	}
 	
+	/* Estimates the number of tuples that can be processed for the given duration using configuration, nodeIndex*/
 	public int EstTuples(int nodeIndex, double duration){
 		int tuples=0;
 		//Logger.writeLog(this.costModel.get(i).x1CoEff+"\t"+this.costModel.get(i).offset);
@@ -632,6 +642,8 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		return tuples;
 	}
 	
+	
+	/* Returns the maximum available file number at the given point of time, time_pt */
 	public int ip_num_tuple(float time_pt) {
 		int num_tuple=0;
 		if(time_pt>wind_end_time)
@@ -647,6 +659,8 @@ public int detMinBatchSizeForMultiQryBaseline() {
 			
 	}
 	
+	
+	/* Given the time point at which the given file, num_tuple will be ready as per the current input rate */
 	public float ip_time(int num_tuple) {
 		float time=0.0f;
 		if(num_tuple>=num_tuple_total) {
@@ -660,6 +674,8 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		return time;
 	}
 	
+	
+	/* Given the time point at which the given file, num_tuple will be ready as per the input rate, modiInputRate */
 	public float ip_time_modified(int num_tuple,float modiInputRate) {
 		float time=0.0f;
 		if(num_tuple>=num_tuple_total) {
@@ -673,6 +689,9 @@ public int detMinBatchSizeForMultiQryBaseline() {
 		return time;
 	}
 	
+	/* Does the processing of the current query batch by invoking QueryRepository.exe_qry()
+	aggLevel is set as 0/3/4 to denote no aggregation, final aggreagtion, partial aggregation respectively
+	num_tuple_processed is updated based on the current batch size*/
 	public void process_dyn_query(int curNodeIndex) /* TBM : ForSimu */ //: arg not required
 	{
 		//System.out.println(this.query_id+" is processed @ "+QueryScheduler.cur_time);
@@ -856,37 +875,7 @@ public int detMinBatchSizeForMultiQryBaseline() {
 
 
 
-
-public float compTimeDiff(Timestamp startTime, Timestamp endTime) {
-	java.util.Date date = new java.util.Date();
-	Timestamp timestamp1 = new Timestamp(date.getTime());
-
-	Calendar cal = Calendar.getInstance();
-	cal.setTimeInMillis(startTime.getTime());
-
-	// add a bunch of seconds to the calendar
-	cal.add(Calendar.SECOND, 98765);
-
-	// create a second time stamp
-	Timestamp timestamp2 = new Timestamp(cal.getTime().getTime());
-
-	long milliseconds = endTime.getTime() - startTime.getTime();
-	int seconds = (int) milliseconds / 1000;
-
-	int hours = seconds / 3600;
-	int minutes = (seconds % 3600) / 60;
-	seconds = (seconds % 3600) % 60;
-
-	Logger.writeLog("timestamp1: " + timestamp1);
-	Logger.writeLog("timestamp2: " + timestamp2);
-
-	Logger.writeLog("Difference: ");
-	Logger.writeLog(" Hours: " + hours);
-	Logger.writeLog(" Minutes: " + minutes);
-	Logger.writeLog(" Seconds: " + seconds);
-	return 0.0f;
-}
-
+/* Input rate specified in $QRY_INPUT_PATH/ipRate.txt is used as the actual input rate for the experimental run*/
 public void loadIpRate(){
 	 String ipRateFileName=inputPath+"/ipRate.txt";
 	 File fp = new File(ipRateFileName);
@@ -911,6 +900,7 @@ public void loadIpRate(){
 	 }	 
 }
 
+/* Determines the maximum file number ready at the given point of time using the input rate specified in $QRY_INPUT_PATH/ipRate.txt*/
 public int compFileNoWithIpRate(float time){
 	int curXIndex=0;
 	int fileNo=0;
@@ -945,6 +935,7 @@ public int compFileNoWithIpRate(float time){
 	return fileNo;
 }
 
+/* Determines the number of files ready at the given point of time using the input rate specified in $QRY_INPUT_PATH/ipRate.txt*/
 public int compNumFilesWithIpRate(float time){
 	int curXIndex=0;
 	int fileNo=0;
@@ -988,6 +979,7 @@ public int compNumFilesWithIpRate(float time){
 	return fileNo;
 }
 
+/* Computes the time at which the given file number will be ready as per the current input rate*/
 public float EstTimeForFile(int fileNo) {
 	Logger.writeLog("inside EstTimeForFile: ipFileNo=="+fileNo);
 	float estTime=(fileNo/this.input_rate)+this.wind_start_time-1;

@@ -6,20 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-class QryBchSchPointValues{
-
-	ArrayList<Float> simuTime=new ArrayList<Float>();
-	ArrayList<ArrayList<Integer>> numTuplesProcessedLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> numTupleTotalLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> numTuplesPendingLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> curBatchNoLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> numBatchesProcessedLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> curBatchSizeLst=new ArrayList<ArrayList<Integer>>();
-	ArrayList<ArrayList<Integer>> numBatchesForAggLst=new ArrayList<ArrayList<Integer>>();
-        ArrayList<ArrayList<Integer>> completionStsLst=new ArrayList<ArrayList<Integer>>();
-        ArrayList<ArrayList<String>> qryIdLst=new ArrayList<ArrayList<String>>();
-}
-
+/* Data structure to store time and the query which is scheduled for execution along with its attributes.*/
 class MultiQryBchSch{	
 	float totalComputeTime;
 	float totalTime;
@@ -59,10 +46,29 @@ class MultiQryBchSch{
 	}
 }
 
+/* Data structure to store time and the corresponding query attributes for all the queries at the given time.
+To rerun simulation from a given time point, query attributes for all queries at the given time is restored from this data structure*/
+class QryBchSchPointValues{
+
+	ArrayList<Float> simuTime=new ArrayList<Float>();
+	ArrayList<ArrayList<Integer>> numTuplesProcessedLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> numTupleTotalLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> numTuplesPendingLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> curBatchNoLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> numBatchesProcessedLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> curBatchSizeLst=new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> numBatchesForAggLst=new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> completionStsLst=new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<String>> qryIdLst=new ArrayList<ArrayList<String>>();
+}
+
 public class ScheduleOptimiser {
 	
 	static MultiQryBchSch multiQryBchSchLst=new MultiQryBchSch();
 
+/* Main module of Simulation.
+   Invokes runSimulation() for different batch sizes and initial number of nodes
+   Chooses the schedule which incurs the least cost */
 	public static void runSimulationMain(float cur_time,boolean firstEntry,int curNodeIndex,List<Query> q_list,boolean simulation) {
 		
 		//if(cur_time>10)
@@ -297,6 +303,7 @@ public class ScheduleOptimiser {
                 //cur_time=4; //TBR
 	}
 
+/* Determines the schedule with the initial number of nodes and batch size (numTimes)*/
 	public static MultiQryBchSch runSimulation(int numTimes,int nodeIndex,float modiIpRateFact, boolean addNodes,float cur_time,List<Query> q_list) {
 	    
 	    		
@@ -730,6 +737,7 @@ public class ScheduleOptimiser {
 	                
 	}
 	
+/* Computes cost in dollars based on the generated schedule */	
 	public static void CompCostFrmNodeSch(MultiQryBchSch multiQryBchSchLstTmp,float simuEndTime){
         float startTime=multiQryBchSchLstTmp.startTime;
         float stopTime=simuEndTime;
@@ -795,6 +803,7 @@ public class ScheduleOptimiser {
       
 }
 	
+/* Main module which simulates fixed configuration scheduling by invoking genFixedConfigSch() for different batch sizes and configurations */	
 	public static void genFixedConfigSchMain(float cur_time, List<Query> q_list){
 	    
 	    int[] numTimesLst={1,2,4,8,16,32};
@@ -967,6 +976,8 @@ public class ScheduleOptimiser {
 		   }
             }
 	}
+	
+/* Generates the node schedule for the given time point, simuCurTime using a fixed configuration, nodeIndex */	
 public static void genFixedConfigSch(ArrayList<Query> simuQryListTmp, float simuCurTime, MultiQryBchSch bchSch, int nodeIndex){
 		   
 		    bchSch.schGenerated = true;
@@ -1267,7 +1278,10 @@ public static void genFixedConfigSch(ArrayList<Query> simuQryListTmp, float simu
 		                      
 		    //return obj;
 		}
-
+		
+/* Generates the query batch schedule from the given time point using config, nodeIndex. 
+   Returns with bchSch.schGenerated set as false, if a query with the least laxity has negative slack time
+   Or on successful scheduling of all queries returns with bchSch.schGenerated set as true along with the query batch schedule, bchSch */
 		public static void verifyConfig(ArrayList<Query> simuQryListTmp, float simuCurTime, MultiQryBchSch bchSch, QryBchSchPointValues schPtValues, int nodeIndex){
 		   
 		    bchSch.schGenerated = true;
@@ -1668,7 +1682,7 @@ public static void genFixedConfigSch(ArrayList<Query> simuQryListTmp, float simu
 		}
 		//public MultiQrySch runSimulation(float rslFact,int nodeIndex,float modiIpRate, boolean addNodes) {
 
-
+/* Main module which simulates LLF without batch size determination by invoking genOnlyLLFSch() for different configuration*/
 public static void genOnlyLLFSchMain(float cur_time,List<Query> q_list){
 		    
 		     
@@ -1780,6 +1794,7 @@ public static void genOnlyLLFSchMain(float cur_time,List<Query> q_list){
 		       
 	}
 		
+/* Generates node schedule for LLF without batch size determination for the given config, nodeIndex */		
 	public static void genOnlyLLFSch(ArrayList<Query> simuQryListTmp, float simuCurTime, MultiQryBchSch bchSch, int nodeIndex){
 		   
 		    bchSch.schGenerated = true;
@@ -2084,7 +2099,7 @@ public static void genOnlyLLFSchMain(float cur_time,List<Query> q_list){
 		    //return obj;
 		}
 
-	
+/* Writes the chosen schedule to $QRY_INPUT_PATH/sch.txt*/	
 	public static void writeSchToFile() {
 		String qryIpBasePath=System.getenv("QRY_INPUT_PATH"); 
 		String inputPath=qryIpBasePath+"/";	 
@@ -2112,9 +2127,10 @@ public static void genOnlyLLFSchMain(float cur_time,List<Query> q_list){
 	}
 	}
         
+/* Writes the simulation results to $QRY_INPUT_PATH/exeLog.txt */        
     public static void writeResToFile(MultiQryBchSch bchSch,List<Query> q_list){        
         for(int i=0;i<bchSch.curTime.size();i++){
-            if(bchSch.curTime.get(i)>=4500){
+            if(bchSch.curTime.get(i)>=Cluster.curSessionWindEnd){
                 for(int q=0;q<q_list.size();q++){
                     if(bchSch.qryIdLst.get(i).equals(q_list.get(q).query_id)){
                         if(bchSch.compStopTimeLst.get(i)<=q_list.get(q).deadline)

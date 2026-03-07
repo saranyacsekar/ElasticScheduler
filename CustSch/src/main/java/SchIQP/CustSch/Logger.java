@@ -11,6 +11,8 @@ public class Logger {
 	static boolean firstEntry=true;
     public static String mode="FILE";
     static boolean writeLog=false;    
+    
+      /* Truncates the $QRY_INPUT_PATH/exeLog.txt contents. Invoked at the beginning of the run*/
 	static void emptyLog(){		
 		Process proc;	
 	    String command = "> "+fileOp;
@@ -27,6 +29,8 @@ public class Logger {
 			e.printStackTrace();
 		}	
 	}
+	
+	/* Writes the given string to $QRY_INPUT_PATH/exeLog.txt */
 	public static void writeLog(String str) {	
 
 		 if(firstEntry)

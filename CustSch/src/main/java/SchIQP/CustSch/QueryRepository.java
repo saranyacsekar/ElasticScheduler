@@ -18,6 +18,7 @@ public class QueryRepository {
 		static String  tpcInputPath=System.getenv("TPC_INPUT_PATH");
 		static String  yahooInputPath=System.getenv("YAHOO_INPUT_PATH");
 		
+		/* Path to static data of TPC-H and Yahoo Streaming dataset*/
 		static String 	fullPathCust=tpcInputPath+"/file-ip/static/customer";
 		static String	fullPathPart=tpcInputPath+"/file-ip/static/parts";
 		static String	fullPathPartSupp=tpcInputPath+"/file-ip/static/partSupp";
@@ -27,7 +28,7 @@ public class QueryRepository {
 		
 			
 			
-		
+		/* Invokes the appropriate query execution module based on the Query ID*/
 		public static void exe_qry(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 			if(queryNo.equals("Q1"))
@@ -54,51 +55,12 @@ public class QueryRepository {
 				exe_custQry(queryNo,batchNo, aggLevel,files); 
 		}
 		
-		public  static void exe_startup_qry(Map<String,ArrayList<String>> files) {
-			
-			
-			//String basePathStrtUp=inputPath+"/file-ip/streaming/startup";		
-			ArrayList<String> lFiles=files.get("lineitem");	
-	        String[] lFiles_str=new String[lFiles.size()];
-	        for(int xx=0;xx<lFiles.size();xx++)
-					lFiles_str[xx]=lFiles.get(xx);
-				
-			 StructType lineItemSchema = new StructType()
-						.add("orderKey", "integer")
-						.add("partKey", "integer")
-						.add("suppKey", "integer")
-						.add("lineNo", "integer")
-						.add("qty", "integer")
-						.add("extendedPrice", "float")
-						.add("discount", "float")
-						.add("tax", "float")
-						.add("returnFlg", "string")
-						.add("lineStatus","string")
-						.add("shipDate", org.apache.spark.sql.types.DataTypes.DateType)
-						.add("commitDate", org.apache.spark.sql.types.DataTypes.DateType)
-						.add("receiptDate", org.apache.spark.sql.types.DataTypes.DateType)
-						.add("shipInstr", "string")
-						.add("shipMode", "string")
-						.add("comment", "string")
-						.add("l_time","string");
-				
-				Dataset<Row> lineItemDFCsv = CSSparkSession.spark.read().format("csv")
-						  .option("sep", "|")
-						  .option("inferSchema", "false")
-						  .option("header", "false")
-						  .schema(lineItemSchema)
-						  .load(lFiles_str);
-				
-			
-				lineItemDFCsv.createOrReplaceTempView("lItems");		
-				
-				String query = "select * from  lItems ";
-				
-				Dataset<Row> ItemsPerSuppKey = CSSparkSession.spark.sql(query); 
-				ItemsPerSuppKey.show();		 		
-
-		}
 		
+		/*Yahoo Streaming Query. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public  static void exe_yq1(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 	    		
@@ -247,7 +209,11 @@ public class QueryRepository {
 
 		}
 
-		
+		/*TPC-Q1. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public  static void exe_q1(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 		    	
@@ -423,6 +389,11 @@ public class QueryRepository {
 
 		}
 		
+		/*TPC-Q3. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q3(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 					
 			
@@ -626,6 +597,11 @@ public class QueryRepository {
 			
 		}
 		
+		/*TPC-Q4. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q4(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 			ArrayList<String> oFiles=files.get("orders");
@@ -800,6 +776,11 @@ public class QueryRepository {
 
 		}
 		
+		/*TPC-Q6. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q6(String queryNo, String batchNo, int aggLevel,Map<String,ArrayList<String>> files) {
 			
 			
@@ -935,6 +916,11 @@ public class QueryRepository {
 		 
 		}
 		
+		/*TPC-Q9. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q9(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 
 			
@@ -1201,6 +1187,11 @@ public class QueryRepository {
 		}
 		
 		
+		/*TPC-Q10. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q10(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 		
 			
@@ -1428,6 +1419,11 @@ public class QueryRepository {
 			}
 		}
 		
+		/*TPC-Q12. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 		public static void exe_q12(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 			
@@ -1600,6 +1596,13 @@ public class QueryRepository {
 
 			}
 		}
+	
+	
+	/*TPC-Q14. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 	public static void exe_q14(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 			
 		
@@ -1754,6 +1757,12 @@ public class QueryRepository {
 				 
 			}
 		}
+		
+	/*TPC-Q19. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/	
 	public static void exe_q19(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 		
 			 
@@ -1919,6 +1928,12 @@ public class QueryRepository {
 		}
 	}
 
+
+	/*Custom queries on TPC-H. 
+		aggLevel 0 denotes no aggregation, only current batch has to be processed. 
+		aggLevel 2 denotes final aggregation, i.e. process current batch and then do final aggregation
+		aggLevel 3 denotes partail aggregation, i.e. process current batch and then do partial aggregation for the intermediate results obtained so far
+		files denotes the list of files ready belonging to the current batch*/
 	public static void exe_custQry(String queryNo, String batchNo, int aggLevel, Map<String,ArrayList<String>> files) {
 		
 		
