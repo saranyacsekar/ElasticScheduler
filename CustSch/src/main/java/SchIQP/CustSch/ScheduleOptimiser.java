@@ -85,7 +85,7 @@ public class ScheduleOptimiser {
 			//System.out.println("Node index=================================================="+c);
 			Logger.writeLog("Node index=========="+c);
 			if(firstEntry==false && c>curNodeIndex){
-	                    System.out.println("No time to add additional nodes");
+	                    //System.out.println("No time to add additional nodes");
 	                    //break;
 	                }
 		//for(float rslFact=AWSCluster.rsfMin;rslFact<=AWSCluster.rsfMax;rslFact+=10){
@@ -302,6 +302,85 @@ public class ScheduleOptimiser {
 		Logger.writeLog("ToLog::Simulation End Time:"+new Timestamp(System.currentTimeMillis())+" cur_time="+cur_time);
                 //cur_time=4; //TBR
 	}
+	
+	/* Copies source MultiQryBchSch to destination */
+	public static MultiQryBchSch CopyBchSch(MultiQryBchSch bchSchSrc){
+            MultiQryBchSch bchSchDest= new MultiQryBchSch();
+            bchSchDest.totalComputeTime=bchSchSrc.totalComputeTime;
+            bchSchDest.totalTime=bchSchSrc.totalTime;
+            bchSchDest.idleTime=bchSchSrc.idleTime;		
+            bchSchDest.totalCost=bchSchSrc.totalCost;	
+            bchSchDest.startTime=bchSchSrc.startTime;
+            bchSchDest.startNumNodes=bchSchSrc.startNumNodes;
+            bchSchDest.curIndex=bchSchSrc.curIndex;
+            bchSchDest.minIndex=bchSchSrc.minIndex;
+            bchSchDest.maxTimeTBSched=bchSchSrc.maxTimeTBSched;
+            bchSchDest.qryIdTBS=bchSchSrc.qryIdTBS;
+            bchSchDest.qryBchNoTBS=bchSchSrc.qryBchNoTBS;
+            bchSchDest.schGenerated=bchSchSrc.schGenerated;
+            //bchSchDest.idleTimeSet=bchSchSrc.idleTimeSet;
+            for(int kk=0;kk<bchSchSrc.curTime.size();kk++)  {                            
+                bchSchDest.curTime.add(bchSchSrc.curTime.get(kk));
+                bchSchDest.qryIdLst.add(bchSchSrc.qryIdLst.get(kk));
+                bchSchDest.reqNumNodesLst.add(bchSchSrc.reqNumNodesLst.get(kk));
+                bchSchDest.qryBatchNoLst.add(bchSchSrc.qryBatchNoLst.get(kk));
+                bchSchDest.compStartTimeLst.add(bchSchSrc.compStartTimeLst.get(kk));
+                bchSchDest.compStopTimeLst.add(bchSchSrc.compStopTimeLst.get(kk));
+                bchSchDest.batchRdyTimeLst.add(bchSchSrc.batchRdyTimeLst.get(kk));
+            }
+            //System.out.println("copying bchSch:::"+bchSchDest.qryIdTBS+" "+bchSchDest.qryBchNoTBS);
+            return bchSchDest;
+        }
+        
+        /* Copies source QryBchSchPointValues to destination */
+        public static QryBchSchPointValues CopySchPtValues(QryBchSchPointValues schPtValuesSrc){
+    
+            //System.out.println("check thisssssss:CopySchPtValues"+schPtValuesSrc.simuTime.size()+" "+schPtValuesSrc.qryIdLst.get(0).size());
+            QryBchSchPointValues schPtValuesDest = new QryBchSchPointValues();
+            for(int kk=0;kk<schPtValuesSrc.simuTime.size();kk++){
+                schPtValuesDest.simuTime.add(schPtValuesSrc.simuTime.get(kk));
+                ArrayList<Integer> numTuplesProcessedLst=new ArrayList<Integer>();
+                ArrayList<Integer> numTupleTotalLst=new ArrayList<Integer>();
+                ArrayList<Integer> numTuplesPendingLst=new ArrayList<Integer>();
+                ArrayList<Integer> curBatchNoLst=new ArrayList<Integer>();
+                ArrayList<Integer> numBatchesProcessedLst=new ArrayList<Integer>();
+                ArrayList<Integer> curBatchSizeLst=new ArrayList<Integer>();
+                ArrayList<Integer> numBatchesForAggLst=new ArrayList<Integer>();
+                ArrayList<Integer> completionStsLst=new ArrayList<Integer>();
+                ArrayList<String> qryIdLst=new ArrayList<String>();
+                
+                
+                //for(int ll=0;ll<schPtValuesSrc.qryIdLst.size();ll++)
+                   
+                    
+                       
+                    
+                for(int ll=0;ll<schPtValuesSrc.qryIdLst.get(kk).size();ll++){
+                    //System.out.println(schPtValuesSrc.qryIdLst.size()+" "+schPtValuesDest.numTuplesProcessedLst.size());
+                        numTuplesProcessedLst.add(schPtValuesSrc.numTuplesProcessedLst.get(kk).get(ll));
+                        numTupleTotalLst.add(schPtValuesSrc.numTupleTotalLst.get(kk).get(ll));
+                        numTuplesPendingLst.add(schPtValuesSrc.numTuplesPendingLst.get(kk).get(ll));
+                        curBatchNoLst.add(schPtValuesSrc.curBatchNoLst.get(kk).get(ll));
+                        numBatchesProcessedLst.add(schPtValuesSrc.numBatchesProcessedLst.get(kk).get(ll));
+                        curBatchSizeLst.add(schPtValuesSrc.curBatchSizeLst.get(kk).get(ll));
+                        numBatchesForAggLst.add(schPtValuesSrc.numBatchesForAggLst.get(kk).get(ll));
+                        completionStsLst.add(schPtValuesSrc.completionStsLst.get(kk).get(ll));
+                        qryIdLst.add(schPtValuesSrc.qryIdLst.get(kk).get(ll));
+                }
+                schPtValuesDest.numTuplesProcessedLst.add(numTuplesProcessedLst);
+                schPtValuesDest.numTupleTotalLst.add(numTupleTotalLst);
+                schPtValuesDest.numTuplesPendingLst.add(numTuplesPendingLst);
+                schPtValuesDest.curBatchNoLst.add(curBatchNoLst);
+                schPtValuesDest.numBatchesProcessedLst.add(numBatchesProcessedLst);
+                schPtValuesDest.curBatchSizeLst.add(curBatchSizeLst);
+                schPtValuesDest.numBatchesForAggLst.add(numBatchesForAggLst);
+                schPtValuesDest.completionStsLst.add(completionStsLst);
+                schPtValuesDest.qryIdLst.add(qryIdLst);
+        
+            }
+            return schPtValuesDest;
+}
+
 
 /* Determines the schedule with the initial number of nodes and batch size (numTimes)*/
 	public static MultiQryBchSch runSimulation(int numTimes,int nodeIndex,float modiIpRateFact, boolean addNodes,float cur_time,List<Query> q_list) {
@@ -330,7 +409,7 @@ public class ScheduleOptimiser {
 	    
 	    MultiQryBchSch bchSch = new MultiQryBchSch();
 	   
-	        
+            MultiQryBchSch bchSchSav = new MultiQryBchSch();    
 	     
 	    simuQryList.clear();
 	    simuQryList2.clear();
@@ -362,6 +441,8 @@ public class ScheduleOptimiser {
 	    ArrayList<Integer> curBatchSize=new ArrayList<Integer>();
 	    ArrayList<Integer> numBatchesForAgg=new ArrayList<Integer>();
 	    ArrayList<Integer> completionSts=new ArrayList<Integer>();
+	    
+	    QryBchSchPointValues schPtValuesSav =new QryBchSchPointValues();
 	    
 	    for(int i=0;i<q_list.size();i++) {
 	        numTuplesProcessed.add(0);
@@ -475,6 +556,8 @@ public class ScheduleOptimiser {
 	        schPtValues.numBatchesForAggLst.add(numBatchesForAgg);
 	        schPtValues.completionStsLst.add(completionSts);
 	        schPtValues.qryIdLst.add(qryId);*/
+	        
+	        boolean firstEntrySimu=true;
 	        
 	    while(!exitFlg){
 	        
@@ -621,6 +704,20 @@ public class ScheduleOptimiser {
 	            
 	            simuCurTime=bchSch.compStopTimeLst.get(bchSch.compStopTimeLst.size()-1);
 	            exitFlg=true;
+	            
+	            //check if idle time exists before the start of queries
+                    if((minWindStartTime-simuStartTime)>(2*Cluster.clusterInitOH)){
+                        
+                       bchSch.curTime.add(0,simuStartTime);
+                       bchSch.qryIdLst.add(0,"DMYQRY");
+                       bchSch.reqNumNodesLst.add(0,startNodeIndex);
+                       bchSch.qryBatchNoLst.add(0,1);
+                       bchSch.compStartTimeLst.add(0,simuStartTime);
+                       bchSch.compStopTimeLst.add(0,bchSch.compStartTimeLst.get(1));
+                       bchSch.batchRdyTimeLst.add(0,simuStartTime);
+                       
+                    }
+                    
 	            //System.out.println("************************");
 	            /*System.out.println("Printing final list");
 	            for(int i=0;i<bchSch.curTime.size();i++){
@@ -645,14 +742,36 @@ public class ScheduleOptimiser {
 	            /*System.out.println(schPtValues.simuTime.get(schPtValues.simuTime.size()-1));
 	            for(int kk=0;kk<simuQryList.size();kk++)
 	                System.out.println(schPtValues.qryIdLst.get(schPtValues.simuTime.size()-1).get(kk)+" "+schPtValues.numTuplesProcessedLst.get(schPtValues.simuTime.size()-1).get(kk)+" "+schPtValues.completionStsLst.get(schPtValues.simuTime.size()-1).get(kk));*/
-	                    
+	            
+	            if(firstEntrySimu){                        
+                        firstEntrySimu=false;                          
+                        //System.out.println("copying @ bchSch.maxTimeTBSched="+bchSch.maxTimeTBSched);
+                        bchSch.curIndex=bchSch.curTime.size();
+                        bchSch.maxTimeTBSched=bchSch.curTime.get(bchSch.curTime.size()-1);    
+                        bchSch.qryIdTBS=bchSch.qryIdLst.get(bchSch.curTime.size()-1);
+                        bchSch.qryBchNoTBS=bchSch.qryBatchNoLst.get(bchSch.curTime.size()-1);   
+                        bchSch.minIndex=0;            
+                        //finding minIndexPoint based on idle time
+                        for(int i=bchSch.curTime.size()-1;i>0;i--){                        
+                            if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)==0){
+                                bchSch.minIndex=i-1;
+                            }
+                            else
+                                break;
+                        }
+                        bchSchSav=CopyBchSch(bchSch);
+                        schPtValuesSav=CopySchPtValues(schPtValues);
+                    }
+                            
 	            boolean resetIndex=false;
+	            boolean restoreSch=false;
 	            if(bchSch.curIndex==-1)
 	                resetIndex=true;
 	            else if(bchSch.curTime.get(bchSch.curTime.size()-1)>bchSch.maxTimeTBSched){
 	                for(int i=bchSch.curTime.size()-1;i>bchSch.curIndex;i--){
 	                    if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)>0){
 	                        resetIndex=true;
+	                        restoreSch=true;
 	                        break;
 	                    }
 	                }
@@ -670,26 +789,60 @@ public class ScheduleOptimiser {
 	                } 
 	                      
 	          
-	            bchSch.curIndex=bchSch.curTime.size();
-	            bchSch.maxTimeTBSched=bchSch.curTime.get(bchSch.curTime.size()-1);    
-	            bchSch.qryIdTBS=bchSch.qryIdLst.get(bchSch.curTime.size()-1);
-	            bchSch.qryBchNoTBS=bchSch.qryBatchNoLst.get(bchSch.curTime.size()-1);   
-	            bchSch.minIndex=0;            
-	            //finding minIndexPoint based on idle time
-	            for(int i=bchSch.curTime.size()-1;i>0;i--){
-	                if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)==0){
-	                    bchSch.minIndex=i-1;
-	                }
-	                else
-	                    break;
+	                        
+	             if(restoreSch){
+                        
+                        /*System.out.println("before copying::"+bchSch.curIndex);
+                        for(int i=0;i<bchSch.curIndex;i++){
+                            System.out.println(i+" "+bchSch.qryIdLst.get(i)+" "+bchSch.compStartTimeLst.get(i)+" "+bchSch.compStopTimeLst.get(i)+" "+bchSch.reqNumNodesLst.get(i));
+	                    //bchSch.reqNumNodesLst.set(i,Cluster.numNodes.get(startNodeIndex));
+                        }*/
+                         int restoreCurIndex=bchSch.curIndex;
+                         bchSch=CopyBchSch(bchSchSav);
+                         schPtValues=CopySchPtValues(schPtValuesSav);
+                                //if(bchSch.curIndex==-1)
+                         bchSch.qryIdTBS=bchSch.qryIdLst.get(bchSch.curTime.size()-1);
+                         bchSch.qryBchNoTBS=bchSch.qryBatchNoLst.get(bchSch.curTime.size()-1);          
+                         bchSch.curIndex=bchSch.curTime.size()-1;
+                         bchSch.maxTimeTBSched=bchSch.curTime.get(bchSch.curTime.size()-1);   
+                         bchSch.minIndex=0;            
+                        //finding minIndexPoint based on idle time
+                        for(int i=bchSch.curTime.size()-1;i>0;i--){                        
+                            if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)==0){
+                                bchSch.minIndex=i-1;
+                            }
+                            else
+                                break;
+                        }
+                        
+                        //System.out.println("after copying curIndex:"+bchSch.curIndex+" "+restoreCurIndex+" "+nodeIndex+" "+bchSch.qryIdTBS+" "+bchSch.qryBchNoTBS);
+                        /*for(int i=0;i<bchSch.curIndex;i++){
+                            System.out.println(i+" "+bchSch.qryIdLst.get(i)+" "+bchSch.compStartTimeLst.get(i)+" "+bchSch.compStopTimeLst.get(i)+" "+bchSch.reqNumNodesLst.get(i));
+	                    //bchSch.reqNumNodesLst.set(i,Cluster.numNodes.get(startNodeIndex));
+                        }*/
+                    }
+                    else{
+                        bchSch.curIndex=bchSch.curTime.size();
+                        bchSch.maxTimeTBSched=bchSch.curTime.get(bchSch.curTime.size()-1);    
+                        bchSch.qryIdTBS=bchSch.qryIdLst.get(bchSch.curTime.size()-1);
+                        bchSch.qryBchNoTBS=bchSch.qryBatchNoLst.get(bchSch.curTime.size()-1);   
+                        bchSch.minIndex=0;            
+                        //finding minIndexPoint based on idle time
+                        for(int i=bchSch.curTime.size()-1;i>0;i--){                        
+                            if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)==0){
+                                bchSch.minIndex=i-1;
+                            }
+                            else
+                                break;
+                        }
 	            }
-	            //System.out.println("Updated minIndexPoint::"+bchSch.minIndex+" maxIndexPoint::"+bchSch.curIndex+" maxTimeSched::"+bchSch.maxTimeSched);    
+                    
+	            //System.out.println("Updated minIndexPoint::"+bchSch.minIndex+" maxIndexPoint::"+bchSch.curIndex+" "+bchSch.qryIdTBS+" "+bchSch.qryBchNoTBS);    
 	            //Logger.writeLog("Updated minIndexPoint::"+bchSch.minIndex+" maxIndexPoint::"+bchSch.curIndex+" maxTimeSched::"+bchSch.maxTimeSched);                                               
 	               
 	            }
-	            
 	                
-	            if((bchSch.curIndex-bchSch.minIndex)>100)
+	            if((bchSch.curIndex-bchSch.minIndex)>10)
                         bchSch.curIndex-=10;
                     else	
                         bchSch.curIndex--;
@@ -704,8 +857,23 @@ public class ScheduleOptimiser {
 	                    exitFlg=true;
 	                }
 	                //reset nodeIndex for init value for all entries, last one gets removed subseq
-	                for(int i=0;i<bchSch.curIndex;i++)
-	                    bchSch.reqNumNodesLst.set(i,Cluster.numNodes.get(startNodeIndex));
+	                /*for(int i=0;i<bchSch.curIndex;i++)
+	                    bchSch.reqNumNodesLst.set(i,Cluster.numNodes.get(startNodeIndex));*/
+	                int restoreCurIndex=bchSch.curIndex;
+                        bchSch=CopyBchSch(bchSchSav);
+                        schPtValues=CopySchPtValues(schPtValuesSav);
+                        //if(bchSch.curIndex==-1)
+                        bchSch.curIndex=bchSch.curTime.size()-1;
+	                bchSch.maxTimeTBSched=bchSch.curTime.get(bchSch.curTime.size()-1);   
+                        bchSch.minIndex=0;            
+                        //finding minIndexPoint based on idle time
+                        for(int i=bchSch.curTime.size()-1;i>0;i--){                        
+                            if(bchSch.compStartTimeLst.get(i)-bchSch.compStopTimeLst.get(i-1)==0){
+                                bchSch.minIndex=i-1;
+                            }
+                            else
+                                break;
+                        }    
 	            } 
 	            
 	            
@@ -754,7 +922,15 @@ public class ScheduleOptimiser {
             if(i==multiQryBchSchLstTmp.reqNumNodesLst.size()-1){
                 //nodeIndexTmp=getNumNodeIndex(multiQryBchSchLstTmp.reqNumNodesLst.get(i));
                 //startTime=multiQryBchSchLstTmp.curTime.get(i);
-                stopTime=simuEndTime;
+                if(Cluster.getNumNodeIndex(multiQryBchSchLstTmp.reqNumNodesLst.get(i))==nodeIndexTmp)
+                    stopTime=simuEndTime;
+                else{
+                    stopTime=multiQryBchSchLstTmp.curTime.get(i);                		
+                    multiQryBchSchLstTmp.totalCost+=(stopTime-startTime)*Cluster.costFact.get(nodeIndexTmp);
+                    nodeIndexTmp=Cluster.getNumNodeIndex(multiQryBchSchLstTmp.reqNumNodesLst.get(i));
+                    startTime=multiQryBchSchLstTmp.curTime.get(i);
+                    stopTime=simuEndTime;
+                }
             }
             else if(Cluster.getNumNodeIndex(multiQryBchSchLstTmp.reqNumNodesLst.get(i))==nodeIndexTmp)
             	continue;
